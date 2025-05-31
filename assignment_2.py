@@ -23,6 +23,30 @@ def quicksort(input):
     right_array = [z for z in input if z > chosen_pivot]
     return quicksort(left_array) + middle_match + quicksort(right_array)
 
+# recursive implementation of the mergesort algorithm
+def mergesort(input):
+    if len(input) <= 1:
+        return input
+    mid = len(input) // 2
+    left = mergesort(input[:mid])
+    right = mergesort(input[mid:])
+    return merge(left, right)
+
+# handles the merge of two arrays
+def merge(left, right):
+    merged = []
+    x = y = 0
+    while x < len(left) and y < len(right):
+        if left[x] <= right[y]:
+            merged = merged + [left[x]]
+            x += 1
+        else:
+            merged = merged + [right[y]]
+            y += 1
+    merged = merged + left[x:]
+    merged = merged + right[y:]
+    return merged
+
 # generate random data based on set input size of ARRAY_SIZE
 def generate_random_data():
     out = [random.randint(0, ARRAY_SIZE) for x in range(ARRAY_SIZE)]
@@ -46,6 +70,15 @@ def test_quicksort(input_data):
     print("Time taken: " + str(end_time - start_time) + " seconds")
     print("Memory used: " + str(max(mem_usage) - min(mem_usage)) + " MiB")
 
+# runs mergesort on the input data and measures the time taken & memory used
+def test_mergesort(input_data):
+    start_time = time.time()
+    mem_usage = memory_usage((quicksort, (input_data,)))
+    end_time = time.time()
+    print("Time taken: " + str(end_time - start_time) + " seconds")
+    print("Memory used: " + str(max(mem_usage) - min(mem_usage)) + " MiB")
+
+
 if __name__ == "__main__":
     print("Excuting quicksort test for random data")
     data = generate_random_data()
@@ -58,3 +91,17 @@ if __name__ == "__main__":
     print("Excuting quicksort test for reversed sorted data")
     data = generate_reversed_sorted_data()
     test_quicksort(data)
+
+    print()
+
+    print("Excuting mergesort test for random data")
+    data = generate_random_data()
+    test_mergesort(data)
+
+    print("Excuting mergesort test for sorted data")
+    data = generate_sorted_data()
+    test_mergesort(data)
+
+    print("Excuting mergesort test for reversed sorted data")
+    data = generate_reversed_sorted_data()
+    test_mergesort(data)
